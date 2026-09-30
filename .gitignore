@@ -1,0 +1,16 @@
+# ROS 2 
+build/
+install/
+log/
+
+#VS code
+.vscode/
+
+#cash
+_pycache_/
+*._pyc
+*.o
+*.so
+
+# system
+.DS_Store

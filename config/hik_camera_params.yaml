@@ -1,0 +1,5 @@
+/hike_camera:
+  ros_parameters:
+    topic_name:"/image_raw"
+    exposure_time:10000.0
+    gain:10.0
