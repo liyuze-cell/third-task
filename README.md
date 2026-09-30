@@ -38,16 +38,6 @@ ros launch hik_camera_ros2 hik_camera.launch.py
 | `exposure_time` | double | `10000.0` | 曝光时间（单位：微秒） |
 | `gain` | double | `10.0` | 增益 |
 
-## 关于可视化工具无法启动的说明
-
-本项目在测试过程中，发现运行 `rviz2` 或 `rqt_image_view` 时会导致程序崩溃，报错信息通常为 `Cannot mix incompatible Qt library (5.15.10) with this library (5.15.3)` 或提示与 Wayland 环境冲突。
-
-### 替代验证方案
-虽然图形化界面无法使用，但这并不影响我们验证相机节点的工作状态。本项目使用了以下命令行工具来替代 RViz2 完成图像数据的验证：
-1. **验证数据流是否正常**：`ros2 topic hz /image_raw`
-   - 该命令将输出稳定的平均帧率，证明图像数据正在持续发布。
-2. **验证数据内容是否有效**：`ros2 topic echo /image_raw --once`
-   - 该命令会打印出一帧完整的图像字节数据，证明话题内有真实的图像内容。
-3. **动态参数验证**：`ros2 param set /hik_camera exposure_time 20000.0`
-   - 证明参数修改能正确同步到相机硬件。
-
+## result
+![failed](result/task1.png)
+![failed](result/task2.png)
