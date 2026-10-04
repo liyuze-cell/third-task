@@ -102,14 +102,14 @@ private:
         ret = MV_CC_RegisterImageCallBackEx(handle_, &HikCameraNode::imageCallback, this);
         if (ret != MV_OK) {
             RCLCPP_ERROR(this->get_logger(), "注册回调失败");
-            disconnectCamera(); // <--- 统一调用！
+            disconnectCamera(); 
             return;
         }
 
         ret = MV_CC_StartGrabbing(handle_);
         if (ret != MV_OK) {
             RCLCPP_ERROR(this->get_logger(), "开始取流失败");
-            disconnectCamera(); // <--- 统一调用！
+            disconnectCamera(); 
             return;
         }
 
