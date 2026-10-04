@@ -18,10 +18,10 @@ MVS SDK 属于厂商提供的第三方闭源 SDK，**无法通过 `rosdep` 自�
 ```bash
 cd ~/ros2_ws
 colcon build --packages-select hik_camera_ros2
-source install/stdup.zsh
+source install/setup.zsh
 
 ros2 run hik_camera_ros2 hik_camera_node
-ros launch hik_camera_ros2 hik_camera.launch.py
+ros2 launch hik_camera_ros2 hik_camera.launch.py
 ```
 
 ## 发布的话题
@@ -38,6 +38,4 @@ ros launch hik_camera_ros2 hik_camera.launch.py
 | `exposure_time` | double | `10000.0` | 曝光时间（单位：微秒） |
 | `gain` | double | `10.0` | 增益 |
 
-## result
-![failed](result/task1.png)
-![failed](result/task2.png)
+## 

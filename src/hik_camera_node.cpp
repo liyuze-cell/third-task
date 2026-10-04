@@ -19,12 +19,13 @@ public:
         this->declare_parameter("gain", 10.0);
         this->declare_parameter("frame_rate", 30.0);
         this->declare_parameter("pixel_format", "BayerRG8");
+        this->declare_parameter("serial_number", ""); // refresh
 
         std::string topic = this->get_parameter("topic_name").as_string();
         pub_ = this->create_publisher<sensor_msgs::msg::Image>(topic, 10);
 
         int ret = MV_CC_Initialize();
-        if (ret != MV_OK) {
+        if (ret != MV_OK) { 
             RCLCPP_ERROR(this->get_logger(), "MVS SDK 初始化失败!");
             return;
         }
@@ -56,7 +57,24 @@ private:
             return;
         }
 
-        ret = MV_CC_CreateHandle(&handle_, stDeviceList.pDeviceInfo[0]);
+        std::string target_serial = this->get_parameter("serial_number").as_string();
+        int target_index = 0; 
+
+        if (!target_serial.empty()) {
+            for (unsigned int i = 0; i < stDeviceList.nDeviceNum; i++) {
+                std::string serial;
+                if (stDeviceList.pDeviceInfo[i]->nTLayerType == MV_USB_DEVICE) {
+                    serial = (char*)stDeviceList.pDeviceInfo[i]->SpecialInfo.stUsb3VInfo.chSerialNumber;
+                } else if (stDeviceList.pDeviceInfo[i]->nTLayerType == MV_GIGE_DEVICE) {
+                    serial = (char*)stDeviceList.pDeviceInfo[i]->SpecialInfo.stGigEInfo.chSerialNumber;
+                }
+                if (serial == target_serial) {
+                    target_index = i;
+                    break;
+                }
+            }
+        }
+        ret = MV_CC_CreateHandle(&handle_, stDeviceList.pDeviceInfo[target_index]);
         if (ret != MV_OK) return;
         
         ret = MV_CC_OpenDevice(handle_);
