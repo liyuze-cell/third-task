@@ -79,10 +79,10 @@ private:
         
         ret = MV_CC_OpenDevice(handle_);
         if (ret != MV_OK) {
-            MV_CC_DestroyHandle(handle_);
-            handle_ = nullptr;
+            RCLCPP_ERROR(this->get_logger(), "打开相机失败");
+            disconnectCamera(); // <--- 统一调用，不要手写 DestroyHandle
             return;
-        }
+        }   
 
         double exp = this->get_parameter("exposure_time").as_double();
         double gain = this->get_parameter("gain").as_double();
@@ -100,10 +100,18 @@ private:
         MV_CC_SetEnumValueByString(handle_, "PixelFormat", pixel_format.c_str());
 
         ret = MV_CC_RegisterImageCallBackEx(handle_, &HikCameraNode::imageCallback, this);
-        if (ret != MV_OK) return;
+        if (ret != MV_OK) {
+            RCLCPP_ERROR(this->get_logger(), "注册回调失败");
+            disconnectCamera(); // <--- 统一调用！
+            return;
+        }
 
         ret = MV_CC_StartGrabbing(handle_);
-        if (ret != MV_OK) return;
+        if (ret != MV_OK) {
+            RCLCPP_ERROR(this->get_logger(), "开始取流失败");
+            disconnectCamera(); // <--- 统一调用！
+            return;
+        }
 
         is_connected_ = true;
         last_frame_time_ = this->now();
